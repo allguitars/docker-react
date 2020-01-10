@@ -5,10 +5,23 @@ services:
 before_install:
   - docker build -t allguitars/docker-react -f Dockerfile.dev .
 
-script:
+script: 
   - docker run -e CI=true allguitars/docker-react yarn test
   
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-southeast-1"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-ap-southeast-1-871255055834"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
 
 # Additionally, you may want to set the following property if your travis build fails with “rakefile not found” by adding to the top of your .travis.yml file:
-
 # language: generic 
+
+#    deploy:
+#      edge: true
